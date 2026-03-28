@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "925867988095",
+    "project_id": "rnprep-c9b19",
+    "storage_bucket": "rnprep-c9b19.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:925867988095:android:0152f1ed3a01b000471b4a",
+        "android_client_info": {
+          "package_name": "com.rnprep"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKfLGXg5V0845c--vSgr-x-RbP7FH64Qc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

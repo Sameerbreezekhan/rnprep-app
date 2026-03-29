@@ -68,9 +68,9 @@ export const portfolioHtml =
 
 <!-- HERO SECTION -->
 <div class="card">
-  <h1>sameerr Khan</h1>
+  <h1>sameer Khan</h1>
   <p>React Native Developer | Mobile App Specialist</p>
-  <p>sameerrbreezkhan@gmail.com</p>
+  <p>sameerbreezkhan@gmail.com</p>
   <p>+91 8770523530</p>
 </div>
 

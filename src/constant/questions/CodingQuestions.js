@@ -6,7 +6,7 @@ export const CodingQuestions = [
     answer: `
       <pre>
 <code>
-let a = "sameerr";<br/>
+let a = "sameer";<br/>
 
 let l = a.length;<br/>
 let r = "";<br/>
@@ -176,7 +176,7 @@ console.log(sum);</br>
       <pre>
 <code>
 
-let a="sameerr";</br>
+let a="sameer";</br>
 let l=a.length;</br>
 let v=["o","u","e","i","a"];</br>
 let c=[];</br>

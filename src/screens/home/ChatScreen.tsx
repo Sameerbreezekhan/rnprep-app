@@ -31,47 +31,39 @@ const ChatScreen = ({ navigation }: any) => {
 
   const chatRef = useRef<any>(null);
 
-  // const sendMessage = async () => {
-  //   if (!input) return;
+  
 
-  //   const userMessage = { role: 'user', text: input };
-  //   setMessages((prev: any) => [...prev, userMessage]);
 
-  //   try {
-  //     const app = getApp();
-  //     const ai = getAI(app);
-  //     const model = getGenerativeModel(ai, {
-  //       model: 'gemini-3-flash-preview',
-  //     });
 
-  //     if (!chatRef.current) {
-  //       chatRef.current = model.startChat();
-  //     }
-
-  //     const result = await chatRef.current.sendMessage(input);
-  //     const aiText = result.response.text();
-
-  //     const aiMessage = { role: 'ai', text: aiText };
-
-  //     console.log('AI Response:', aiText);
-
-  //     setMessages((prev: any) => [...prev, aiMessage]);
-  //     setInput('');
-
-  //   } catch (error) {
-  //     console.log('AI Error:', error);
-  //   }
-  // };
 
   // const sendMessage = async () => {
   //   if (!input.trim() || loading) return;
+
+  //   // 🔥 CHECK LIMIT FIRST
+  //   const { allowed, count } = await checkDailyLimit();
+
+  //   if (!allowed) {
+  //     // setMessages((prev: any) => [
+  //     //   ...prev,
+  //     //   {
+  //     //     role: 'ai',
+  //     //     text: 'You reached your 20 messages limit for today. Try again tomorrow 😊',
+  //     //   },
+  //     // ]);
+  //     const tost = {
+  //       heading: "success",
+  //       message: `You reached your 20 messages limit for today. Try again tomorrow`
+  //     };
+  //     emitter.emit("alert", tost);
+  //     return;
+  //   }
 
   //   const userMessage = { role: 'user', text: input };
   //   const tempAiMessage = { role: 'ai', text: 'Typing...', loading: true };
 
   //   setMessages((prev: any) => [...prev, userMessage, tempAiMessage]);
   //   setInput('');
-  //   setLoading(true); // 🔥 Start loading
+  //   setLoading(true);
 
   //   try {
   //     const app = getApp();
@@ -86,6 +78,10 @@ const ChatScreen = ({ navigation }: any) => {
 
   //     const result = await chatRef.current.sendMessage(input);
   //     const aiText = result.response.text();
+  //     console.log('AI Response:', aiText);
+
+  //     // 🔥 INCREMENT AFTER SUCCESS
+  //     await incrementDailyCount();
 
   //     setMessages((prev: any) => {
   //       const updated = [...prev];
@@ -109,86 +105,72 @@ const ChatScreen = ({ navigation }: any) => {
   //     });
 
   //   } finally {
-  //     setLoading(false); // 🔥 Stop loading
+  //     setLoading(false);
   //   }
   // };
 
 
-
-
   const sendMessage = async () => {
-    if (!input.trim() || loading) return;
+  if (!input.trim() || loading) return;
 
-    // 🔥 CHECK LIMIT FIRST
-    const { allowed, count } = await checkDailyLimit();
+  const { allowed } = await checkDailyLimit();
 
-    if (!allowed) {
-      // setMessages((prev: any) => [
-      //   ...prev,
-      //   {
-      //     role: 'ai',
-      //     text: 'You reached your 20 messages limit for today. Try again tomorrow 😊',
-      //   },
-      // ]);
-      const tost = {
-        heading: "success",
-        message: `You reached your 20 messages limit for today. Try again tomorrow`
+  if (!allowed) {
+    emitter.emit("alert", {
+      heading: "Limit Reached",
+      message: "You reached your 20 messages limit for today."
+    });
+    return;
+  }
+
+  const userMessage = { role: 'user', text: input };
+  const tempAiMessage = { role: 'ai', text: 'Typing...', loading: true };
+
+  setMessages((prev:any) => [...prev, userMessage, tempAiMessage]);
+  setInput('');
+  setLoading(true);
+
+  try {
+    const app = getApp();
+    const ai = getAI(app);
+    const model = getGenerativeModel(ai, {
+      model: 'gemini-3-flash-preview',
+    });
+
+    const chat = model.startChat();
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Request timeout')), 15000)
+    );
+
+    const result:any = await Promise.race([
+      chat.sendMessage(input),
+      timeoutPromise,
+    ]);
+
+    const aiText = result.response.text();
+
+    await incrementDailyCount();
+
+    setMessages((prev:any) => {
+      const updated = [...prev];
+      updated[updated.length - 1] = { role: 'ai', text: aiText };
+      return updated;
+    });
+
+  } catch (error) {
+    setMessages((prev:any) => {
+      const updated = [...prev];
+      updated[updated.length - 1] = {
+        role: 'ai',
+        text: error?.message || 'Something went wrong 😔',
       };
-      emitter.emit("alert", tost);
-      return;
-    }
-
-    const userMessage = { role: 'user', text: input };
-    const tempAiMessage = { role: 'ai', text: 'Typing...', loading: true };
-
-    setMessages((prev: any) => [...prev, userMessage, tempAiMessage]);
-    setInput('');
-    setLoading(true);
-
-    try {
-      const app = getApp();
-      const ai = getAI(app);
-      const model = getGenerativeModel(ai, {
-        model: 'gemini-3-flash-preview',
-      });
-
-      if (!chatRef.current) {
-        chatRef.current = model.startChat();
-      }
-
-      const result = await chatRef.current.sendMessage(input);
-      const aiText = result.response.text();
-      console.log('AI Response:', aiText);
-
-      // 🔥 INCREMENT AFTER SUCCESS
-      await incrementDailyCount();
-
-      setMessages((prev: any) => {
-        const updated = [...prev];
-        updated[updated.length - 1] = {
-          role: 'ai',
-          text: aiText,
-        };
-        return updated;
-      });
-
-    } catch (error) {
-      console.log('AI Error:', error);
-
-      setMessages((prev: any) => {
-        const updated = [...prev];
-        updated[updated.length - 1] = {
-          role: 'ai',
-          text: 'Something went wrong 😔',
-        };
-        return updated;
-      });
-
-    } finally {
-      setLoading(false);
-    }
-  };
-
+      return updated;
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
 

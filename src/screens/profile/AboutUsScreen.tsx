@@ -50,7 +50,7 @@ const AboutUsScreen = ({ navigation }: any) => {
   };
 
   const handleEmail = async () => {
-  const email = 'sameerrbreezkhan@gmail.com';
+  const email = 'sameerbreezkhan@gmail.com';
   const url = `mailto:${email}`;
 
    Linking.openURL(url).catch((err) =>
@@ -69,10 +69,10 @@ const AboutUsScreen = ({ navigation }: any) => {
                         {/* HERO */}
                         <Image source={Images.sameer} style={styles.image} />
                         <View style={styles.card}>
-                            <Text style={styles.name}>sameerr Khan</Text>
+                            <Text style={styles.name}>Sameer Khan</Text>
                             <Text style={styles.role}>React Native Developer</Text>
                               <TouchableOpacity onPress={()=>handleEmail()}>
-                            <Text style={styles.info}>sameerrbreezkhan@gmail.com</Text>
+                            <Text style={styles.info}>sameerbreezkhan@gmail.com</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={()=>handleCall()}>
                             <Text style={styles.phone}>+91 8770523530</Text>

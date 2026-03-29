@@ -115,7 +115,7 @@ export const TypeScriptQuestions = [
 
     <pre>
 <code>
-let name: string = "sameerr";
+let name: string = "sameer";
 let age: number = 25;
 </code>
     </pre>
@@ -276,7 +276,7 @@ type User = {
 
     <pre>
 <code>
-let user: [string, number] = ["sameerr", 25];
+let user: [string, number] = ["sameer", 25];
 </code>
     </pre>
   `
